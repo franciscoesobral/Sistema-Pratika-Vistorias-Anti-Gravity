@@ -1,0 +1,1 @@
+Sempre verifique o arquivo @IMPLEMENTATION_PLAN.md antes de começar uma nova tarefa para saber em qual fase estamos.

@@ -1,0 +1,211 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// -- ENUMS --
+
+enum StatusPagamento {
+  pago
+  em_aberto
+  vencido
+  isento
+  cortesia
+}
+
+enum FormaPagamento {
+  dinheiro
+  pix
+  cartao
+  boleto
+  faturado
+}
+
+enum StatusConta {
+  em_aberto
+  pago
+  atrasado
+  negociado
+}
+
+enum TipoServico {
+  pericia
+  consulta
+  atualizacao
+  outros
+}
+
+enum PeriodoMeta {
+  mensal
+  semanal
+}
+
+// -- TABELAS PRINCIPAIS --
+
+model Loja {
+  id         String   @id @default(uuid())
+  nome       String
+  documento  String?
+  contato    String?
+  telefone   String?
+  email      String?
+  status     Boolean  @default(true)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  servicos       Servico[]
+  contas_receber ContaReceber[]
+
+  @@map("lojas")
+}
+
+model Perito {
+  id         String   @id @default(uuid())
+  nome       String
+  email      String?  @unique
+  telefone   String?
+  ativo      Boolean  @default(true)
+  created_at DateTime @default(now())
+
+  servicos              Servico[]
+  historico_gamificacao GamificacaoHistorico[]
+
+  @@map("peritos")
+}
+
+model ClienteParticular {
+  id         String   @id @default(uuid())
+  nome       String
+  cpf        String?
+  telefone   String?
+  email      String?
+  origem     String? // Ex: Google, Indicação
+  created_at DateTime @default(now())
+
+  servicos       Servico[]
+  contas_receber ContaReceber[]
+
+  @@map("clientes_particulares")
+}
+
+model Servico {
+  id        String   @id @default(uuid())
+  data_hora DateTime
+
+  // Relacionamentos
+  loja_id String?
+  loja    Loja?   @relation(fields: [loja_id], references: [id])
+
+  cliente_particular_id String?
+  cliente_particular    ClienteParticular? @relation(fields: [cliente_particular_id], references: [id])
+
+  perito_id String
+  perito    Perito @relation(fields: [perito_id], references: [id])
+
+  // Dados do Serviço
+  placa_veiculo    String
+  tipo             TipoServico
+  valor            Decimal          @db.Decimal(10, 2)
+  status_pagamento StatusPagamento  @default(em_aberto)
+  forma_pagamento  FormaPagamento?
+  observacoes      String?
+  drive_file_id    String?
+  created_at       DateTime         @default(now())
+
+  // Relação opcional: um serviço pode gerar uma conta a receber (1:1)
+  conta_receber ContaReceber?
+
+  @@map("servicos")
+}
+
+// -- FINANCEIRO --
+
+model ContaReceber {
+  id String @id @default(uuid())
+
+  // Relacionamentos
+  referencia_servico_id String?  @unique
+  referencia_servico    Servico? @relation(fields: [referencia_servico_id], references: [id])
+
+  loja_id String?
+  loja    Loja?   @relation(fields: [loja_id], references: [id])
+
+  cliente_particular_id String?
+  cliente_particular    ClienteParticular? @relation(fields: [cliente_particular_id], references: [id])
+
+  // Dados Financeiros
+  descricao       String?
+  valor_total     Decimal     @db.Decimal(10, 2)
+  data_emissao    DateTime
+  data_vencimento DateTime
+  data_pagamento  DateTime?
+  status          StatusConta @default(em_aberto)
+
+  // Arquivos
+  url_nf          String?
+  url_boleto      String?
+  url_comprovante String?
+
+  created_at DateTime @default(now())
+
+  @@map("contas_receber")
+}
+
+model ContaPagar {
+  id              String      @id @default(uuid())
+  descricao       String
+  categoria       String
+  fornecedor      String?
+  valor           Decimal     @db.Decimal(10, 2)
+  data_vencimento DateTime
+  data_pagamento  DateTime?
+  status          StatusConta @default(em_aberto)
+
+  url_nf          String?
+  url_boleto      String?
+  url_comprovante String?
+
+  created_at DateTime @default(now())
+
+  @@map("contas_pagar")
+}
+
+// -- METAS E GAMIFICAÇÃO --
+
+model Meta {
+  id               String      @id @default(uuid())
+  tipo             String // empresa, loja, perito
+  referencia_id    String? // ID genérico
+  periodo          PeriodoMeta
+  meta_pericias    Int?
+  meta_faturamento Decimal?    @db.Decimal(10, 2)
+  data_inicio      DateTime
+  data_fim         DateTime
+
+  @@map("metas")
+}
+
+model GamificacaoHistorico {
+  id String @id @default(uuid())
+
+  perito_id String
+  perito    Perito @relation(fields: [perito_id], references: [id])
+
+  periodo_inicio DateTime
+  periodo_fim    DateTime
+  tipo_periodo   PeriodoMeta
+
+  pontos_total            Int @default(0)
+  pericias_realizadas     Int @default(0)
+  consultas_realizadas    Int @default(0)
+  atualizacoes_realizadas Int @default(0)
+  posicao_rank            Int?
+
+  created_at DateTime @default(now())
+
+  @@map("gamificacao_historico")
+}
