@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deploy Automático - Prátika Vistorias</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .step {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        .step h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        .step p {
+            color: #555;
+            line-height: 1.6;
+            margin: 8px 0;
+        }
+        .code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        .success {
+            background: #10b981;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: none;
+        }
+        .warning {
+            background: #f59e0b;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .progress {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Deploy Automático</h1>
+        <p class="subtitle">Prátika Vistorias - Sistema completo</p>
+
+        <div class="progress">
+            <div class="progress-bar" id="progress"></div>
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ ATENÇÃO:</strong> Você precisa estar logado no Vercel nesta mesma aba do navegador!
+        </div>
+
+        <button class="btn" onclick="abrirVercelDashboard()">
+            1️⃣ Abrir Vercel Dashboard
+        </button>
+
+        <div class="step">
+            <h3>📦 Frontend</h3>
+            <p><strong>1.</strong> No Vercel, clique em <strong>"Add New..." → "Project"</strong></p>
+            <p><strong>2.</strong> Selecione: <code>Sistema-Pratika-Vistorias-Anti-Gravity</code></p>
+            <p><strong>3.</strong> Configure:</p>
+            <div class="code">
+Project Name: pratika-vistorias<br>
+Framework Preset: Vite<br>
+Root Directory: frontend<br>
+Build Command: npm run build<br>
+Output Directory: dist
+            </div>
+            <p><strong>4.</strong> Clique em <strong>"Deploy"</strong></p>
+            <button class="btn" onclick="copiarConfigFrontend()">📋 Copiar Configuração</button>
+        </div>
+
+        <div class="step">
+            <h3>⚙️ Backend</h3>
+            <p><strong>1.</strong> Repita: <strong>"Add New..." → "Project"</strong></p>
+            <p><strong>2.</strong> Mesmo repositório</p>
+            <p><strong>3.</strong> Configure:</p>
+            <div class="code">
+Project Name: pratika-vistorias-api<br>
+Framework Preset: Other<br>
+Root Directory: backend<br>
+Build Command: npm run vercel-build
+            </div>
+            <p><strong>4.</strong> <strong>ANTES de Deploy:</strong></p>
+            <ul style="margin-left: 20px; color: #555;">
+                <li>Storage → Create Database → Postgres</li>
+                <li>Nome: <code>pratika-db</code></li>
+                <li>Conectar ao projeto backend</li>
+            </ul>
+            <p><strong>5.</strong> Environment Variables:</p>
+            <div class="code" id="envVars">
+DATABASE_URL=${POSTGRES_PRISMA_URL}<br>
+JWT_SECRET=<span id="jwtSecret"></span><br>
+FRONTEND_URL=[URL do frontend]<br>
+PORT=3333
+            </div>
+            <button class="btn" onclick="gerarJWT()">🔐 Gerar JWT Secret</button>
+            <button class="btn" onclick="copiarEnvVars()">📋 Copiar Variáveis</button>
+        </div>
+
+        <div class="success" id="success">
+            ✅ Instruções prontas! Agora é só seguir os passos no Vercel Dashboard.
+        </div>
+
+        <div class="step">
+            <h3>📝 Após Deploy</h3>
+            <p>Teste os endpoints:</p>
+            <div class="code">
+Frontend: https://pratika-vistorias.vercel.app<br>
+Backend: https://pratika-vistorias-api.vercel.app/health
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function abrirVercelDashboard() {
+            window.open('https://vercel.com/new', '_blank');
+            document.getElementById('progress').style.width = '33%';
+            document.getElementById('success').style.display = 'block';
+        }
+
+        function gerarJWT() {
+            const array = new Uint8Array(32);
+            crypto.getRandomValues(array);
+            const jwt = Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+            document.getElementById('jwtSecret').textContent = jwt;
+            document.getElementById('progress').style.width = '66%';
+            alert('✅ JWT Secret gerado! Copie as variáveis de ambiente.');
+        }
+
+        function copiarConfigFrontend() {
+            const config = `Project Name: pratika-vistorias
+Framework Preset: Vite
+Root Directory: frontend
+Build Command: npm run build
+Output Directory: dist`;
+            navigator.clipboard.writeText(config);
+            alert('✅ Configuração copiada! Cole no Vercel.');
+        }
+
+        function copiarEnvVars() {
+            const jwt = document.getElementById('jwtSecret').textContent;
+            if (!jwt) {
+                alert('⚠️ Gere o JWT Secret primeiro!');
+                return;
+            }
+            const envVars = `DATABASE_URL=\${POSTGRES_PRISMA_URL}
+JWT_SECRET=${jwt}
+FRONTEND_URL=[SUBSTITUIR pela URL do frontend]
+PORT=3333`;
+            navigator.clipboard.writeText(envVars);
+            document.getElementById('progress').style.width = '100%';
+            alert('✅ Variáveis copiadas! Cole no Vercel (Environment Variables).');
+        }
+
+        // Gerar JWT automaticamente ao carregar
+        window.onload = () => {
+            gerarJWT();
+        };
+    </script>
+</body>
+</html>
