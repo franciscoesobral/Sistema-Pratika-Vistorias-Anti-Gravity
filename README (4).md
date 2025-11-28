@@ -1,240 +1,248 @@
-🛠️ PRÁTIKA VISTORIAS – Sistema de Gestão Operacional & Financeira com IA
+🛠️ README.md — Prátika Vistorias (Versão Completa com Execução Local)
+# 🛠️ Prátika Vistorias  
+### Sistema de Gestão Operacional & Financeira com IA  
+### **Versão com Execução Local (Backend + Frontend + Banco + Workers)**
+
+O sistema **Prátika Vistorias** foi desenvolvido para automatizar por completo o fluxo operacional e financeiro de vistorias cautelares.  
+Ele substitui processos manuais, elimina planilhas frágeis e entrega uma operação moderna, inteligente e escalável.
+
+Agora com **execução local completa**, utilizando banco de dados, backend, workers e geração nativa de relatórios PDF/Excel.
+
+---
+
+# 📌 Visão Geral
+
+A plataforma integra múltiplos módulos:
+
+- Ingestão automática de laudos PDF via Google Drive  
+- Extração inteligente de dados do laudo  
+- Registro automatizado no banco  
+- Dashboards operacionais e financeiros  
+- Controle total de contas a pagar/receber  
+- Sistema de metas por loja/perito  
+- Gamificação de produção  
+- Relatórios em PDF e Excel (on-demand e automáticos)  
+- Alertas de queda de produção  
+- Execução local para zero custo mensal  
+
+---
+
+# 🚀 Funcionalidades Principais
+
+## 1. 📝 Ingestão Automática de Laudos (PDF → Dados Estruturados)
+- Monitoramento de pasta do Google Drive  
+- Extração automática dos dados:
+  - Loja  
+  - Placa  
+  - Data  
+  - Perito  
+  - Tipo de serviço  
+  - Valor  
+  - Status financeiro  
+- Validação automática  
+- Registro no banco  
+- Histórico de auditoria  
+
+---
+
+## 2. 📊 Dashboard Operacional & Financeiro
+
+### Métricas:
+- Perícias por dia/semana/mês  
+- Faturamento  
+- Comparativo por loja  
+- Comparativo por perito  
+- Ranking  
+- Tendências  
+- Alertas automáticos  
+
+---
+
+## 3. 💰 Controle Financeiro Completo
+- Contas a receber (lançamento automático via laudos)  
+- Contas a pagar  
+- Fluxo de caixa  
+- Upload de comprovantes e notas  
+- Acompanhamento de saldo  
+- Relatórios financeiros PDF/Excel  
+
+---
+
+## 4. 🎯 Sistema de Metas
+- Metas por loja  
+- Metas por perito  
+- Meta geral mensal  
+- Barras de progresso e percentuais  
+
+---
+
+## 5. 🎮 Gamificação de Peritos
+Pontuação padrão:
+- Perícia → 10 pts  
+- Consulta → 5 pts  
+- Atualização → 3 pts  
+
+Relatórios automáticos:
+- Ranking semanal  
+- Ranking mensal  
+- Campeão da semana/mês  
+
+---
+
+## 6. 📧 Relatórios Automáticos (E-mail)
+Relatórios enviados via worker:
+
+- **Diário** — às 06:00  
+- **Semanal** — segundas às 08:00  
+- **Quinzenal** — dias 01 e 15 às 08:00  
+- **Mensal** — primeiro dia útil às 08:00  
+
+Conteúdo:
+- Total de perícias  
+- Faturamento  
+- Lista de pendências  
+- Ranking  
+- Queda/crescimento  
+- PDF e Excel anexados  
 
-Automação total do fluxo de vistorias cautelares, financeiro completo, dashboards, gamificação de peritos e ingestão automática de laudos via Google Drive.
-Este repositório contém o backend, frontend, banco de dados e documentação da plataforma desenvolvida para a empresa Prátika Vistorias.
+---
 
-📌 Visão Geral
+## 7. 📄 Relatórios On-Demand (PDF & Excel)
+Todos os relatórios podem ser gerados instantaneamente:
 
-O Sistema Prátika Vistorias nasceu para substituir processos manuais, planilhas frágeis e trabalho repetitivo por uma plataforma unificada, inteligente e automatizada.
+### Endpoints:
+- `GET /relatorios/lojas/pdf`
+- `GET /relatorios/lojas/excel`
+- `GET /relatorios/peritos/pdf`
+- `GET /relatorios/peritos/excel`
+- `GET /relatorios/financeiro/pdf`
+- `GET /relatorios/financeiro/excel`
 
-A aplicação integra:
+### Tecnologias:
+- **Puppeteer** → PDF com layout profissional  
+- **ExcelJS** → planilhas completas  
 
-Leitura automática de laudos PDF enviados ao Google Drive
+---
 
-Extração dos dados do laudo (loja, perito, placa, valor, serviço etc.)
+# 🧱 Arquitetura
 
-Registro automático no banco de dados
 
-Controle financeiro completo
 
-Dashboards e gráficos de desempenho
-
-Rankings semanais e mensais (gamificação)
-
-Alertas automáticos para queda de produção por loja
-
-Relatórios automáticos por e-mail (diário, quinzenal e mensal)
-
-O objetivo é eliminar retrabalho, aumentar eficiência, permitir tomada de decisão rápida e dar visibilidade total da operação.
-
-🚀 Funcionalidades Principais
-✅ 1. Ingestão automática de laudos (PDF → Dados estruturados)
-
-Monitoramento de uma pasta específica no Google Drive
-
-Leitura do PDF usando OCR ou parser customizado
-
-Extração de:
-
-Nome da loja
-
-Placa do veículo
-
-Data da vistoria
-
-Nome do perito
-
-Tipo de serviço (perícia, consulta, atualização)
-
-Valor
-
-Status de pagamento
-
-Validação e armazenamento dos dados no banco.
-
-✅ 2. Dashboard com métricas em tempo real
-
-Inclui:
-
-Total de perícias por dia/semana/mês
-
-Faturamento diário e mensal
-
-Produção por loja
-
-Produção por perito
-
-Gráficos comparativos
-
-Lojas com queda de produção (alerta automático)
-
-Ranking de peritos
-
-Ranking de lojas
-
-✅ 3. Controle Financeiro Completo
-
-Contas a Receber
-
-Lançamento automático via laudos
-
-Acompanhamento de faturamento por loja e por período
-
-Status: pago, em aberto, vencido, negociado
-
-Upload e gestão de NF, boletos e comprovantes
-
-Contas a Pagar
-
-Cadastro de despesas fixas e variáveis
-
-Controle de fornecedores
-
-Upload de comprovantes
-
-Previsão de fluxo de caixa
-
-✅ 4. Sistema de Metas
-
-Metas por loja
-
-Metas por perito
-
-Meta mensal da empresa
-
-Acompanhamento por percentuais e barras de progresso
-
-🎮 5. Gamificação (Ranking de Peritos)
-
-Pontos configuráveis:
-
-Perícia = 10 pontos
-
-Consulta = 5 pontos
-
-Atualização = 3 pontos
-
-Geração automática de:
-
-Ranking semanal
-
-Ranking mensal
-
-Campeão da Semana
-
-Campeão do Mês
-
-📧 6. Relatórios Automáticos por E-mail
-
-Envios automáticos:
-
-Diário → resumo de perícias e faturamento
-
-Semanal → ranking de lojas e peritos
-
-Mensal → relatório financeiro completo
-
-Informações enviadas:
-
-Quantidade de perícias
-
-Total faturado
-
-Top perito
-
-Top loja
-
-Lojas com crescimento e queda
-
-Contas a pagar e resumo de caixa
-
-🧱 Arquitetura da Solução
-Frontend (Next.js/React)
-       ↓
+Frontend (Next.js / React)
+↓
 Backend API (Node.js + TypeScript)
-       ↓
-PostgreSQL (Banco de dados relacional)
-       ↓
-Integração Google Drive (PDF ingestion)
-       ↓
-Serviços auxiliares:
-  - OCR/Leitura de PDF
-  - Envio de e-mails (SMTP)
-  - Scripts de relatórios
+↓
+PostgreSQL (Execução local ou externa)
+↓
+Workers
+├── ingestão Google Drive
+├── relatório diário
+├── relatório semanal
+├── relatório quinzenal
+├── relatório mensal
+↓
+Geração PDF/Excel
 
-🗂️ Modelo de Dados – Tabelas Principais
 
-lojas
+---
 
-clientes_particulares
+# 🗂️ Modelo de Dados (Tabelas Principais)
 
-peritos
+- `lojas`  
+- `peritos`  
+- `servicos`  
+- `contas_receber`  
+- `contas_pagar`  
+- `clientes_particulares`  
+- `metas`  
+- `gamificacao_peritos`  
 
-servicos
+Ver detalhes completos em:  
+📄 `docs/DATA_MODEL.md`
 
-contas_receber
+---
 
-contas_pagar
+# 📁 Estrutura do Repositório
 
-metas
 
-gamificacao_peritos
 
-(Ver arquivo DATA_MODEL.md para estrutura completa com campos e relacionamentos.)
-
-📁 Estrutura do Repositório
 /
 ├── backend/
-│   ├── src/
-│   ├── prisma/ (ou migrations SQL)
-│   ├── package.json
-│   └── README.md
+│ ├── src/
+│ ├── workers/
+│ ├── prisma/
+│ ├── package.json
+│ └── README.md
 │
 ├── frontend/
-│   ├── src/
-│   ├── public/
-│   ├── package.json
-│   └── README.md
+│ ├── src/
+│ ├── public/
+│ ├── package.json
+│ └── README.md
 │
 ├── docs/
-│   ├── ARCHITECTURE.md
-│   ├── DATA_MODEL.md
-│   ├── IMPLEMENTATION_PLAN.md
-│   ├── GOOGLE_DRIVE_INTEGRATION.md
-│   └── EMAIL_REPORTS.md
+│ ├── ARCHITECTURE.md
+│ ├── DATA_MODEL.md
+│ ├── IMPLEMENTATION_PLAN.md
+│ ├── GOOGLE_DRIVE_INTEGRATION.md
+│ ├── EMAIL_REPORTS.md
+│ └── LOCAL_SERVER_SETUP.md
 │
 └── README.md
 
-🛠️ Como Rodar Localmente
-1. Clone o repositório
-git clone https://github.com/SEU-USUARIO/pratika-vistorias.git
-cd praktika-vistorias
 
-2. Configurar Variáveis de Ambiente
+---
 
-Crie um arquivo .env na pasta backend:
+# 🛠️ Execução Local
+
+Abaixo está o passo a passo **completo** para rodar 100% do sistema localmente, sem custo mensal.
+
+---
+
+# 🧰 1. Pré-requisitos
+
+### Sistema local (Windows, Linux, macOS ou mini-PC)
+- Node.js 18+
+- PostgreSQL 14+
+- Git
+- Docker (opcional)
+
+---
+
+# 🗄️ 2. Banco de Dados Local
+
+Opcionalmente você pode usar Docker:
+
+```sh
+docker run --name praktika-db -e POSTGRES_PASSWORD=admin -e POSTGRES_DB=praktika -p 5432:5432 -d postgres
+
+🔧 3. Configurar Variáveis de Ambiente
+
+Crie o arquivo backend/.env:
 
 DATABASE_URL=postgresql://user:password@localhost:5432/pratika
+
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
 GOOGLE_REFRESH_TOKEN=
 DRIVE_FOLDER_ID=
-SMTP_HOST=
-SMTP_PORT=
+
+SMTP_HOST=smtp.seuservidor.com
+SMTP_PORT=587
 SMTP_USER=
 SMTP_PASS=
 EMAIL_DESTINO_RELATORIOS=
 
-3. Instalar dependências
-Backend:
+📦 4. Instalar Dependências
+Backend
 cd backend
 npm install
 
-Frontend:
+Frontend
 cd ../frontend
 npm install
 
-4. Criar Banco de Dados
+🗃️ 5. Criar Banco de Dados
 
 Se usar Prisma:
 
@@ -242,46 +250,55 @@ cd backend
 npx prisma migrate dev
 
 
-Ou executar o script SQL em docs/migrations.sql.
+Ou execute o script SQL em docs/migrations.sql.
 
-5. Rodar o Backend
+▶️ 6. Rodar o Backend (Local)
 npm run dev
 
-6. Rodar o Frontend
+🌐 7. Rodar o Frontend (Local)
 npm run dev
 
-🌐 Deploy
 
-Recomendações:
+Acesse:
+http://localhost:3000
 
-Backend
-Render, Railway ou VPS
+⚙️ 8. Rodar os Workers Locais
 
-Frontend
-Vercel ou Netlify
+Workers responsáveis por ingestão, PDFs, Excel e e-mails:
 
-Banco
-Supabase, Railway ou RDS Lite
+node workers/ingestao.js
+node workers/relatorio-diario.js
+node workers/relatorio-semanal.js
+node workers/relatorio-quinzenal.js
+node workers/relatorio-mensal.js
 
-Arquivo DEPLOY_GUIDE.md (opcional) pode ser criado para orientar cada ambiente.
 
-🧪 Roadmap (Próximas Etapas)
+Ou rodar todos via PM2:
 
- API de auditoria
+pm2 start workers.config.js
 
- Painel de desempenho avançado
+📤 Deploy (Opcional)
+Frontend → Vercel (Free)
+Backend → Render (Starter)
+Banco → Supabase / Railway
+Workers → MiniPC local (custo zero)
+📅 Roadmap
 
- App mobile para peritos
+Painel avançado de tendências
 
- Reconhecimento automático da placa via visão computacional
+App mobile para peritos
 
- Dashboard de tendências (previsão de faturamento)
+IA de leitura automática de placas
+
+Previsão de faturamento (machine learning)
+
+Dashboard de eficiência operacional
 
 🤝 Contribuições
 
-Pull Requests, issues e melhorias são bem-vindos.
-Este sistema foi criado para evoluir continuamente e suportar expansão da empresa.
+Pull Requests são bem-vindos.
+O projeto está em evolução contínua.
 
 📄 Licença
 
-Este projeto está licenciado sob MIT License.
+Licenciado sob MIT License.
